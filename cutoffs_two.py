@@ -2,7 +2,7 @@
 """
 Created on Mon Aug 31 19:43:20 2015
 
-@author: lenovo
+@author: Barbora Doslikova
 """
 
 import scriptHealthIceland_functions
