@@ -27,15 +27,14 @@ data2 = data.drop('Year', 1)
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
-# plots scatter graph of Year vs. fatal accidents
+# No. of total accidents has dropped since 1990s.
 data.plot(kind='scatter', x='Year', y='Total accidents')
 
-# plots scatter graph of Year vs. fatal accidents
+# No. of total FATAL accidents has dropped since 1990s.
 data.plot(kind='scatter', x='Year', y='Total fatal accidents')
 
-# plots scatter graph of Year vs. %
+# The & of total FATAL to total accidents has dropped since 1990s.
 data.plot(kind='scatter', x='Year', y='% of fatal to total accidents')
 
-# scatter plot:
-# No of fatal accidents has decreased independently of no of total accidents.
+# Has the no of fatal accidents decreased independently of no of total accidents?
 data.plot(kind='scatter', x='Total accidents', y='Total fatal accidents')
