@@ -19,28 +19,59 @@ print(decriptive)
 
 
 ######################## NORMALLY DISTRIBUTED? ##############
-import scipy as sc
 
-# histograms
+# Histograms:
 import matplotlib
 matplotlib.style.use('ggplot')
 data.hist(bins=50)
 
-# tests
-print('total skewtest teststat = %6.3f pvalue = %6.4f' % sc.stats.skewtest(data['Total accidents']))
+# Tests:
+import scipy as sc
+print('Total accidents skewtest teststat = %6.3f pvalue = %6.4f' % sc.stats.skewtest(data['Total accidents']))
 # => +1.6 = highly skewed to the left (+-0.5 = normal)
-print('total kurtosis teststat = %6.3f pvalue = %6.4f' % sc.stats.kurtosistest(data['Total accidents']))
+print('Total accidents kurtosis teststat = %6.3f pvalue = %6.4f' % sc.stats.kurtosistest(data['Total accidents']))
 # => -2.6 = highly flatter than normal (0 = normal)(-3 = completely flat)
-print('total normaltest teststat = %6.3f pvalue = %6.4f' % sc.stats.normaltest(data['Total accidents']))
+print('Total accidents normaltest teststat = %6.3f pvalue = %6.4f' % sc.stats.normaltest(data['Total accidents']))
 # => skew & kurtosis tests combined, not normal if p is significant 
 
-print('fatal skewtest teststat = %6.3f pvalue = %6.4f' % sc.stats.skewtest(data['Total fatal accidents']))
-print('fatal kurtosis teststat = %6.3f pvalue = %6.4f' % sc.stats.kurtosistest(data['Total fatal accidents']))
-print('fatal normaltest teststat = %6.3f pvalue = %6.4f' % sc.stats.normaltest(data['Total fatal accidents']))
+print('Total fatal accidents skewtest teststat = %6.3f pvalue = %6.4f' % sc.stats.skewtest(data['Total fatal accidents']))
+print('Total fatal accidents kurtosis teststat = %6.3f pvalue = %6.4f' % sc.stats.kurtosistest(data['Total fatal accidents']))
+print('Total fatal accidents normaltest teststat = %6.3f pvalue = %6.4f' % sc.stats.normaltest(data['Total fatal accidents']))
 
-print('year skewtest teststat = %6.3f pvalue = %6.4f' % sc.stats.skewtest(data['Year']))
-print('year kurtosis teststat = %6.3f pvalue = %6.4f' % sc.stats.kurtosistest(data['Year']))
-print('year normaltest teststat = %6.3f pvalue = %6.4f' % sc.stats.normaltest(data['Year']))
+print('Year skewtest teststat = %6.3f pvalue = %6.4f' % sc.stats.skewtest(data['Year']))
+print('Year kurtosis teststat = %6.3f pvalue = %6.4f' % sc.stats.kurtosistest(data['Year']))
+print('Year normaltest teststat = %6.3f pvalue = %6.4f' % sc.stats.normaltest(data['Year']))
+
+# Q-Q plots:
+import pylab
+import scipy.stats as stats
+
+# as individual plots
+stats.probplot(data['Total accidents'], dist="norm", plot=pylab)
+pylab.show()
+stats.probplot(data['Total fatal accidents'], dist="norm", plot=pylab)
+pylab.show()
+stats.probplot(data['Year'], dist="norm", plot=pylab)
+pylab.show()
+
+'''
+# as subplots
+import matplotlib.pyplot as plt
+import scipy.stats as stats
+ax1 = plt.subplot(311)
+x = data['Total accidents']
+res = stats.probplot(x, plot=plt)
+
+ax2 = plt.subplot(312)
+x = data['Total fatal accidents']
+res = stats.probplot(x, plot=plt)
+
+ax3 = plt.subplot(313)
+x = data['Year']
+res = stats.probplot(x, plot=plt)
+'''
+
+# Conclusion:
 # => none of the data are normally distributed, therefore use spearman (not pearson) correlation
 
 
@@ -55,6 +86,15 @@ correlations.plot(kind='bar')
 # OR single correlation value of the total fatal accidents vs. total accidents
 correlations_spear = data['Total fatal accidents'].corr(data['Total accidents'], method='spearman')
 print(correlations_spear)
-# => the variables are moderately negatively correlated
+# => these two variables are negatively correlated
 # i.e. the more total accidents the fewer fatal accidents
 # => Fatal accidents have been going down inspite of growing no. of total accidents.
+
+# Are the correlations significant?
+cor1 = stats.spearmanr(data['Total accidents'], data['Year'])
+print('Total accidents vs. Year: {0}'.format(cor1))
+cor2 = stats.spearmanr(data['Total fatal accidents'], data['Year'])
+print('Total fatal accidents vs. Year: {0}'.format(cor2))
+cor3 = stats.spearmanr(data['Total fatal accidents'], data['Total accidents'])
+print('Total fatal accidents vs. Total accidents: {0}'.format(cor3))
+# => All three correlations are statistically significant
